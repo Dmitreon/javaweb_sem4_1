@@ -3,23 +3,27 @@ package com.example.javaweb_sem4_1.command.impl;
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.dao.impl.UserDaoImpl;
 import com.example.javaweb_sem4_1.entity.User;
-import com.example.javaweb_sem4_1.exception.CommandException;
-import com.example.javaweb_sem4_1.exception.DaoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.mindrot.jbcrypt.BCrypt;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.example.javaweb_sem4_1.util.PageConstants.*;
 
-public class AddUserCommand implements Command {
+public class RegisterUserCommand implements Command {
+    private static final Logger logger = LogManager.getLogger(RegisterUserCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request) throws CommandException {
+    public String execute(HttpServletRequest request) {
+        logger.debug("Executing RegisterUserCommand with parameters: username={}, email={}",
+                request.getParameter("username"), request.getParameter("email"));
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
 
         if (username == null || password == null) {
-            throw new CommandException("Username or password parameter is missing");
+            return "redirect:/register?error=true";
         }
 
         User user = new User();
@@ -34,14 +38,15 @@ public class AddUserCommand implements Command {
         try {
             boolean isInserted = userDao.insert(user);
             if (isInserted) {
-                request.getSession().setAttribute("message", "User successfully added.");
-                return ADD_USER_SUCCESS_PAGE;
+                request.getSession().setAttribute("message", "User successfully registered.");
+                return REGISTER_SUCCESS_PAGE;
             } else {
-                request.getSession().setAttribute("error", "Failed to add user.");
-                return ADD_USERS_PAGE;
+                request.getSession().setAttribute("error", "Failed to register user.");
+                return REGISTER_PAGE;
             }
-        } catch (DaoException e) {
-            throw new CommandException("Error adding user", e);
+        } catch (Exception e) {
+            request.getSession().setAttribute("error", "Error registering user.");
+            return REGISTER_PAGE;
         }
     }
 }

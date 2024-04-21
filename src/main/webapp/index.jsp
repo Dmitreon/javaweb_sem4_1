@@ -6,9 +6,7 @@
 </head>
 <body>
 
-<h1> "Hello User!"
-</h1>
-
+<h1> Hello User! </h1>
 <br/>
 <form action="controller">
     <input type="hidden" name="command" value="login"/>
@@ -16,10 +14,12 @@
     <br/>
     Password: <input type="password" name="pass" value=""/>
     <br/>
-    <input type = "submit" name = "sub" value = "Push"/>
+    <input type="submit" name="sub" value="Push"/>
     <br/>
     ${login_msg}
 </form>
+
+<p>Not registered yet? <a href="${pageContext.request.contextPath}/pages/register.jsp">Sign up here!</a></p>
 
 </body>
 </html>
