@@ -8,4 +8,5 @@ import java.util.List;
 public interface UserDao {
     boolean authenticate(String login,String password) throws DaoException;
     List<User> findAll() throws DaoException;
+    boolean insert(User user) throws DaoException;
 }

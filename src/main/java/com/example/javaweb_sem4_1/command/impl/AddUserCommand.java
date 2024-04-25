@@ -1,47 +1,42 @@
 package com.example.javaweb_sem4_1.command.impl;
 
 import com.example.javaweb_sem4_1.command.Command;
-import com.example.javaweb_sem4_1.dao.impl.UserDaoImpl;
 import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.CommandException;
-import com.example.javaweb_sem4_1.exception.DaoException;
+import com.example.javaweb_sem4_1.exception.ServiceException;
+import com.example.javaweb_sem4_1.service.UserService;
+import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import org.mindrot.jbcrypt.BCrypt;
 
-import static com.example.javaweb_sem4_1.util.PageConstants.*;
+import static com.example.javaweb_sem4_1.util.PageConstant.*;
 
 public class AddUserCommand implements Command {
+    private static final String PARAM_USERNAME = "username";
+    private static final String PARAM_PASSWORD = "password";
+    private static final String PARAM_EMAIL = "email";
+
+    private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) throws CommandException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-
-        if (username == null || password == null) {
-            throw new CommandException("Username or password parameter is missing");
-        }
+        String username = request.getParameter(PARAM_USERNAME);
+        String password = request.getParameter(PARAM_PASSWORD);
+        String email = request.getParameter(PARAM_EMAIL);
 
         User user = new User();
         user.setUsername(username);
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+        user.setPassword(password);
+        user.setEmail(email);
 
-        if (email != null && !email.trim().isEmpty()) {
-            user.setEmail(email.trim());
-        }
-
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
         try {
-            boolean isInserted = userDao.insert(user);
-            if (isInserted) {
-                request.getSession().setAttribute("message", "User successfully added.");
-                return ADD_USER_SUCCESS_PAGE;
-            } else {
-                request.getSession().setAttribute("error", "Failed to add user.");
-                return ADD_USERS_PAGE;
-            }
-        } catch (DaoException e) {
-            throw new CommandException("Error adding user", e);
+            userService.createUser(user);
+            request.getSession().setAttribute("message", "User successfully added.");
+            return ADD_USER_SUCCESS_PAGE;
+        } catch (ServiceException e) {
+            request.getSession().setAttribute("error", "Failed to add user: " + e.getMessage());
+            return ADD_USERS_PAGE;
         }
     }
 }
+
+

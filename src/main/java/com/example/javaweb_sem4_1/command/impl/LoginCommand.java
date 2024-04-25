@@ -5,7 +5,7 @@ import com.example.javaweb_sem4_1.exception.CommandException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
-import com.example.javaweb_sem4_1.util.PageConstants;
+import com.example.javaweb_sem4_1.util.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -20,12 +20,12 @@ public class LoginCommand implements Command {
             if (userService.authenticate(login, password)){
                 request.setAttribute("user", login);
                 session.setAttribute("user_name", login);
-                session.setAttribute("current_page", PageConstants.MAIN_PAGE);
-                return PageConstants.MAIN_PAGE;
+                session.setAttribute("current_page", PageConstant.MAIN_PAGE);
+                return PageConstant.MAIN_PAGE;
             } else {
                 request.setAttribute("login_msg", "incorrect login or password");
-                session.setAttribute("current_page", PageConstants.INDEX_PAGE);
-                return PageConstants.INDEX_PAGE;
+                session.setAttribute("current_page", PageConstant.INDEX_PAGE);
+                return PageConstant.INDEX_PAGE;
             }
         } catch (ServiceException e) {
             throw new CommandException(e);

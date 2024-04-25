@@ -1,6 +1,6 @@
 package com.example.javaweb_sem4_1.util;
 
-public final class PageConstants {
+public final class PageConstant {
     public static final String INDEX_PAGE = "index.jsp";
     public static final String MAIN_PAGE = "pages/main.jsp";
     public static final String ERROR_PAGE = "pages/error/error_500.jsp";
@@ -10,7 +10,7 @@ public final class PageConstants {
     public static final String REGISTER_PAGE = "pages/register.jsp";
     public static final String REGISTER_SUCCESS_PAGE = "pages/register_success.jsp";
 
-    private PageConstants() {
+    private PageConstant() {
         throw new AssertionError("Instantiating utility class.");
     }
 }

@@ -2,11 +2,13 @@ package com.example.javaweb_sem4_1.command;
 
 //todo
 
+import static com.example.javaweb_sem4_1.util.PageConstant.INDEX_PAGE;
+
 public class Router {
-    private String page = "index.jsp";
+    private String page = INDEX_PAGE;
     private Type type = Type.FORWARD;
     enum Type{
-        FORWARD, REDIRECT;
+        FORWARD, REDIRECT
     }
 
     public Router(String page) {

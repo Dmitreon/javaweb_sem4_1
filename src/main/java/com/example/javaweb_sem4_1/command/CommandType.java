@@ -1,52 +1,46 @@
 package com.example.javaweb_sem4_1.command;
 
 import com.example.javaweb_sem4_1.command.impl.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum CommandType {
-    ADD_USER {
-        public Command create() {
-            return new AddUserCommand();
-        }
-    },
-    LOGIN {
-        public Command create() {
-            return new LoginCommand();
-        }
-    },
-    LOGOUT {
-        public Command create() {
-            return new LogoutCommand();
-        }
-    },
-    VIEW_USERS {
-        public Command create() {
-            return new ViewUsersCommand();
-        }
-    },
-    REGISTER_USER {
-        public Command create() {
-            return new RegisterUserCommand();
-        }
-    },
-    DEFAULT {
-        public Command create() {
-            return new DefaultCommand();
-        }
-    };
+    ADD_USER(new AddUserCommand()),
+    LOGIN(new LoginCommand()),
+    LOGOUT(new LogoutCommand()),
+    VIEW_USERS(new ViewUsersCommand()),
+    REGISTER_USER(new RegisterUserCommand()),
+    DEFAULT(new DefaultCommand());
 
-    public abstract Command create();
+    private static final Logger logger = LogManager.getLogger(CommandType.class);
+    private static final Map<String, Command> commandMap = new HashMap<>();
+
+    static {
+        for (CommandType commandType : values()) {
+            commandMap.put(commandType.name(), commandType.command);
+        }
+    }
+
+    private final Command command;
+
+    CommandType(Command commandInstance) {
+        this.command = commandInstance;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
 
     public static Command define(String commandStr) {
-        CommandType commandType;
-        try {
-            System.out.println("Available commands: " + Arrays.toString(CommandType.values()));
-            commandType = CommandType.valueOf(commandStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            System.out.println("CommandType.define: Command not found: " + commandStr);
-            commandType = DEFAULT;
+        Command command = commandMap.get(commandStr.toUpperCase());
+        if (command != null) {
+            return command;
+        } else {
+            logger.error("Command not found: {}", commandStr);
+            return DEFAULT.getCommand();
         }
-        return commandType.create();
     }
 }

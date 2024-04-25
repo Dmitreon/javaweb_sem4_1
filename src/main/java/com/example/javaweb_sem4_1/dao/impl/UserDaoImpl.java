@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.javaweb_sem4_1.util.SQLConstants.*;
+import static com.example.javaweb_sem4_1.util.SqlQuery.*;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static UserDaoImpl instance = new UserDaoImpl();
@@ -33,7 +33,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(3, user.getEmail());
             int rowsAffected = statement.executeUpdate();
             inserted = rowsAffected > 0;
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             throw new DaoException("Error inserting user into database", e);
         }
         return inserted;
@@ -58,7 +58,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 user.setEmail(resultSet.getString("email"));
                 users.add(user);
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             throw new DaoException("Error retrieving user list from database", e);
         }
         return users;
@@ -80,7 +80,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     return BCrypt.checkpw(password, passwordFromDb);
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InterruptedException e) {
             throw new DaoException("Error authenticating user", e);
         }
         return false;

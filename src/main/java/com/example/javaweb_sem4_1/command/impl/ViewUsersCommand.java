@@ -6,7 +6,7 @@ import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import com.example.javaweb_sem4_1.util.PageConstants;
+import com.example.javaweb_sem4_1.util.PageConstant;
 import com.example.javaweb_sem4_1.exception.CommandException;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ViewUsersCommand implements Command {
         try {
             List<User> usersList = userService.getAllUsers();
             request.setAttribute("users", usersList);
-            return PageConstants.VIEW_USERS_PAGE;
+            return PageConstant.VIEW_USERS_PAGE;
         } catch (ServiceException e) {
             throw new CommandException("Failed to get list of users", e);
         }
