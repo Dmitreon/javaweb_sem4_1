@@ -6,7 +6,8 @@ import com.example.javaweb_sem4_1.exception.DaoException;
 import java.util.List;
 
 public interface UserDao {
-    boolean authenticate(String login,String password) throws DaoException;
     List<User> findAll() throws DaoException;
     boolean insert(User user) throws DaoException;
+    boolean update(User user) throws DaoException;
+    User findBy(String field, String value) throws DaoException;
 }

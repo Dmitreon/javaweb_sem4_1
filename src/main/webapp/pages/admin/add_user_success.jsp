@@ -8,7 +8,7 @@
 <h2>Registration Successful</h2>
 <p>User has been successfully registered.</p>
 
-<a href="${pageContext.request.contextPath}/pages/main.jsp">Return to main Page</a>
+<a href="${pageContext.request.contextPath}/pages/main/main.jsp">Return to main Page</a>
 
 </body>
 </html>

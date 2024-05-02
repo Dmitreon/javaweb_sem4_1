@@ -13,6 +13,8 @@ public enum CommandType {
     LOGOUT(new LogoutCommand()),
     VIEW_USERS(new ViewUsersCommand()),
     REGISTER_USER(new RegisterUserCommand()),
+    VIEW_PROFILE(new ViewProfileCommand()),
+    UPDATE_PASSWORD(new UpdatePasswordCommand()),
     DEFAULT(new DefaultCommand());
 
     private static final Logger logger = LogManager.getLogger(CommandType.class);

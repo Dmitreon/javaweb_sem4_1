@@ -9,20 +9,24 @@ import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
 import com.example.javaweb_sem4_1.util.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
-
-public class ViewUsersCommand implements Command {
+public class ViewProfileCommand implements Command {
     private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
         Router router = new Router();
+
+        if (currentUser == null) {
+            throw new CommandException("No user is currently logged in.");
+        }
+
         try {
-            List<User> usersList = userService.retrieveAllUsers();
-            request.setAttribute("users", usersList);
-            router.setPage(PageConstant.VIEW_USERS_PAGE);
+            User userToView = userService.findUserById(currentUser.getId());
+            request.setAttribute("user", userToView);
+            router.setPage(PageConstant.VIEW_PROFILE_PAGE);
         } catch (Exception e) {
-            throw new CommandException("Failed to get list of users", e);
+            throw new CommandException("Error executing ViewProfileCommand", e);
         }
         return router;
     }

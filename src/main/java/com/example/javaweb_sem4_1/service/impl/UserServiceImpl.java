@@ -6,6 +6,7 @@ import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
+import com.example.javaweb_sem4_1.util.FieldValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
@@ -25,19 +26,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean authenticate(String login, String password) throws ServiceException {
-        boolean match;
+    public User authenticate(String login, String password) throws ServiceException {
         try {
-            match = userDao.authenticate(login, password);
+            if (!FieldValidator.isValidField("username")) {
+                throw new ServiceException("Invalid field");
+            }
+            User user = userDao.findBy("username", login);
+            if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+                return user;
+            } else {
+                throw new ServiceException("Invalid username or password");
+            }
         } catch (DaoException e) {
             logger.log(Level.SEVERE, "Error while authenticating user", e);
             throw new ServiceException("Error while authenticating user", e);
         }
-        return match;
     }
 
+
     @Override
-    public List<User> getAllUsers() throws ServiceException {
+    public List<User> retrieveAllUsers() throws ServiceException {
         logger.log(Level.INFO, "Beginning to retrieve all users.");
         try {
             List<User> users = userDao.findAll();
@@ -68,4 +76,33 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Error while creating user", e);
         }
     }
+
+    @Override
+    public User findUserById(int id) throws ServiceException {
+        try {
+            if (!FieldValidator.isValidField("id")) {
+                logger.log(Level.SEVERE, "Invalid field");
+                throw new ServiceException("Invalid field for user lookup");
+            }
+            return userDao.findBy("id", Integer.toString(id));
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Error finding user by ID", e);
+            throw new ServiceException("Error finding user by ID", e);
+        }
+    }
+
+    @Override
+    public boolean updatePassword(User user, String currentPassword, String newPassword) throws ServiceException {
+        if (!BCrypt.checkpw(currentPassword, user.getPassword())) {
+            return false;
+        }
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        user.setPassword(hashedPassword);
+        try {
+            return userDao.update(user);
+        } catch (DaoException e) {
+            throw new ServiceException("Error updating user's password", e);
+        }
+    }
+
 }

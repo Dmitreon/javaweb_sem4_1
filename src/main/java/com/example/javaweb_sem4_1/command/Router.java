@@ -1,18 +1,23 @@
 package com.example.javaweb_sem4_1.command;
 
-//todo
-
-import static com.example.javaweb_sem4_1.util.PageConstant.INDEX_PAGE;
+import com.example.javaweb_sem4_1.util.PageConstant;
 
 public class Router {
-    private String page = INDEX_PAGE;
-    private Type type = Type.FORWARD;
-    enum Type{
+    private String page;
+    private Type type;
+
+    public enum Type {
         FORWARD, REDIRECT
+    }
+
+    public Router() {
+        this.page = PageConstant.INDEX_PAGE;
+        this.type = Type.FORWARD;
     }
 
     public Router(String page) {
         this.page = page;
+        this.type = Type.FORWARD;
     }
 
     public Router(String page, Type type) {
@@ -26,6 +31,14 @@ public class Router {
 
     public void setPage(String page) {
         this.page = page;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public void setRedirect() {

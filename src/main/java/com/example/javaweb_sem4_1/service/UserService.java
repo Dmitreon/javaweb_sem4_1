@@ -6,7 +6,9 @@ import com.example.javaweb_sem4_1.exception.ServiceException;
 import java.util.List;
 
 public interface UserService {
-    boolean authenticate(String login, String password) throws ServiceException;
-    List<User> getAllUsers() throws ServiceException;
+    User authenticate(String login, String password) throws ServiceException;
+    List<User> retrieveAllUsers() throws ServiceException;
     void createUser(User user) throws ServiceException;
+    User findUserById(int id) throws ServiceException;
+    boolean updatePassword(User user, String currentPassword, String newPassword) throws ServiceException;
 }

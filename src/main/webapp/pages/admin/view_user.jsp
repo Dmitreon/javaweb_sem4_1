@@ -29,7 +29,7 @@
     </tbody>
 </table>
 
-<a href="${pageContext.request.contextPath}/pages/main.jsp">Back</a>
+<a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
 
 </body>
 </html>

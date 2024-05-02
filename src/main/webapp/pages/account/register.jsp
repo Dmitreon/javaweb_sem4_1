@@ -23,7 +23,7 @@
     <input type="submit" value="Register"/>
 </form>
 
-<a href="${pageContext.request.contextPath}/${INDEX_PAGE}">Return to Home Page</a>
+<a href="${pageContext.request.contextPath}/index.jsp">Return to Home Page</a>
 
 </body>
 </html>

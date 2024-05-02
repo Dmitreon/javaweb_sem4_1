@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class ConnectionPool {
     private static final Logger logger = Logger.getLogger(ConnectionPool.class.getName());
-    private static final int MAX_POOL_SIZE = 8; // Pool size constant
+    private static final int MAX_POOL_SIZE = 8;
     private static ConnectionPool instance;
     private BlockingQueue<Connection> freeConnections = new LinkedBlockingQueue<>(MAX_POOL_SIZE);
     private BlockingQueue<Connection> usedConnections = new LinkedBlockingQueue<>(MAX_POOL_SIZE);

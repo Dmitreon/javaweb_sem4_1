@@ -5,8 +5,6 @@
 </head>
 <body>
 
-<h1>Welcome, ${user_name}!</h1>
-
 <h2>Add New User</h2>
 <form action="${pageContext.request.contextPath}/controller" method="post">
     <input type="hidden" name="command" value="add_user"/>
@@ -16,7 +14,7 @@
     <input type="submit" value="Add User"/>
 </form>
 
-<a href="${pageContext.request.contextPath}/pages/main.jsp">Back</a>
+<a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
 
 </body>
 </html>
