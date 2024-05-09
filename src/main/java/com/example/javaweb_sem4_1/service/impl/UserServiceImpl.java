@@ -7,6 +7,7 @@ import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.util.FieldValidator;
+import com.example.javaweb_sem4_1.util.UserValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
@@ -59,23 +60,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) throws ServiceException {
-        if (user.getUsername() == null || user.getPassword() == null) {
-            logger.log(Level.WARNING, "Username or password cannot be null.");
-            throw new ServiceException("Username or password cannot be null.");
+        if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
+            throw new ServiceException("Username, password, and email cannot be null.");
         }
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
-        user.setPassword(hashedPassword);
+        if (!UserValidator.isValidUsername(user.getUsername())) {
+            throw new ServiceException("Invalid username.");
+        }
+        if (!UserValidator.isValidEmail(user.getEmail())) {
+            throw new ServiceException("Invalid email.");
+        }
+        if (!UserValidator.isValidPassword(user.getPassword())) {
+            throw new ServiceException("Invalid password.");
+        }
         try {
+            if (userDao.usernameExists(user.getUsername())) {
+                throw new ServiceException("Username already exists.");
+            }
+            if (userDao.emailExists(user.getEmail())) {
+                throw new ServiceException("Email already exists.");
+            }
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            user.setPassword(hashedPassword);
             boolean isInserted = userDao.insert(user);
             if (!isInserted) {
-                logger.log(Level.SEVERE, "User creation failed: No rows affected.");
                 throw new ServiceException("User creation failed: No rows affected.");
             }
         } catch (DaoException e) {
-            logger.log(Level.SEVERE, "Error while creating user", e);
             throw new ServiceException("Error while creating user", e);
         }
     }
+
 
     @Override
     public User findUserById(int id) throws ServiceException {
@@ -92,17 +106,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updatePassword(User user, String currentPassword, String newPassword) throws ServiceException {
-        if (!BCrypt.checkpw(currentPassword, user.getPassword())) {
-            return false;
+    public void changePassword(User user, String currentPassword, String newPassword, String confirmPassword) throws ServiceException, DaoException {
+        if (newPassword == null || newPassword.isEmpty() || confirmPassword == null || confirmPassword.isEmpty()) {
+            throw new ServiceException("Password fields cannot be empty.");
         }
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new ServiceException("New passwords do not match.");
+        }
+
+        if (!UserValidator.isValidPassword(newPassword)) {
+            throw new ServiceException("Invalid new password.");
+        }
+
+        if (BCrypt.checkpw(newPassword, user.getPassword())) {
+            throw new ServiceException("New password cannot be the same as the current password.");
+        }
+
+        if (!BCrypt.checkpw(currentPassword, user.getPassword())) {
+            throw new ServiceException("Current password is incorrect.");
+        }
+
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         user.setPassword(hashedPassword);
-        try {
-            return userDao.update(user);
-        } catch (DaoException e) {
-            throw new ServiceException("Error updating user's password", e);
+        if (!userDao.update(user)) {
+            throw new ServiceException("Failed to update password.");
         }
     }
 
+
+    @Override
+    public boolean deleteUser(int id) throws ServiceException {
+        try {
+            return userDao.delete(id);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Error deleting user", e);
+            throw new ServiceException("Error deleting user", e);
+        }
+    }
 }

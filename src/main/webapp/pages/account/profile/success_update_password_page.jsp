@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Password Update Success</title>
-    <meta http-equiv="refresh" content="3;controller?command=VIEW_PROFILE">
+    <meta http-equiv="refresh" content="3;${pageContext.request.contextPath}/controller?command=VIEW_PROFILE">
 </head>
 <body>
 <h1>Password Updated Successfully!</h1>

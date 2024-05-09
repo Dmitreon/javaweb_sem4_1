@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 37063
-  Date: 24.04.2024
-  Time: 13:46
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +8,11 @@
 <body>
 
 <h2>Register New Account</h2>
+
+<c:if test="${not empty sessionScope.error}">
+    <p style="color: red;">${sessionScope.error}</p>
+    <c:remove var="error" scope="session"/>
+</c:if>
 
 <form action="${pageContext.request.contextPath}/controller" method="post">
     <input type="hidden" name="command" value="register_user"/>
@@ -27,6 +26,3 @@
 
 </body>
 </html>
-
-
-

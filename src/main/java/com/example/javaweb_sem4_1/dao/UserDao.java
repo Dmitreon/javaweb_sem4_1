@@ -10,4 +10,7 @@ public interface UserDao {
     boolean insert(User user) throws DaoException;
     boolean update(User user) throws DaoException;
     User findBy(String field, String value) throws DaoException;
+    boolean delete(int userId) throws DaoException;
+    boolean usernameExists(String username) throws DaoException;
+    boolean emailExists(String email) throws DaoException;
 }

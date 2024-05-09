@@ -11,6 +11,8 @@
 
 <a href="${pageContext.request.contextPath}/controller?command=UPDATE_PASSWORD">Edit Password</a>
 
+<a href="${pageContext.request.contextPath}/controller?command=DELETE_OWN_ACCOUNT">Delete My Account</a>
+
 <a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
 </body>
 </html>

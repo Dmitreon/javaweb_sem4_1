@@ -19,7 +19,7 @@
     ${login_msg}
 </form>
 
-<p>Not registered yet? <a href="${pageContext.request.contextPath}/pages/account/register.jsp">Sign up here!</a></p>
+<p>Not registered yet? <a href="${pageContext.request.contextPath}/pages/account/register/register.jsp">Sign up here!</a></p>
 
 </body>
 </html>

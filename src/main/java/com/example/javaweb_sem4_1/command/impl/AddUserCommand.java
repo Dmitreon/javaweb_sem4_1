@@ -11,13 +11,16 @@ import com.example.javaweb_sem4_1.util.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class AddUserCommand implements Command {
+    private static final String PARAM_USERNAME = "username";
+    private static final String PARAM_PASSWORD = "password";
+    private static final String PARAM_EMAIL = "email";
     private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
+        String username = request.getParameter(PARAM_USERNAME);
+        String password = request.getParameter(PARAM_PASSWORD);
+        String email = request.getParameter(PARAM_EMAIL);
 
         User user = new User();
         user.setUsername(username);
@@ -27,13 +30,14 @@ public class AddUserCommand implements Command {
         Router router = new Router();
         try {
             userService.createUser(user);
-            request.getSession().setAttribute("message", "User successfully added.");
             router.setPage(PageConstant.ADD_USER_SUCCESS_PAGE);
+            router.setType(Router.Type.REDIRECT);
         } catch (ServiceException e) {
-            request.getSession().setAttribute("error", "Failed to add user: " + e.getMessage());
+            request.getSession().setAttribute("error", e.getMessage());
             router.setPage(PageConstant.ADD_USERS_PAGE);
-            router.setRedirect();
+            router.setType(Router.Type.FORWARD);
         }
         return router;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.example.javaweb_sem4_1.service;
 
 import com.example.javaweb_sem4_1.entity.User;
+import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 
 import java.util.List;
@@ -10,5 +11,7 @@ public interface UserService {
     List<User> retrieveAllUsers() throws ServiceException;
     void createUser(User user) throws ServiceException;
     User findUserById(int id) throws ServiceException;
-    boolean updatePassword(User user, String currentPassword, String newPassword) throws ServiceException;
+    void changePassword(User user, String currentPassword, String newPassword, String confirmPassword) throws ServiceException, DaoException;
+    boolean deleteUser(int id) throws ServiceException;
+
 }

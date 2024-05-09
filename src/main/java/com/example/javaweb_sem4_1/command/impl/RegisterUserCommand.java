@@ -11,13 +11,16 @@ import com.example.javaweb_sem4_1.util.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class RegisterUserCommand implements Command {
+    private static final String PARAM_USERNAME = "username";
+    private static final String PARAM_PASSWORD = "password";
+    private static final String PARAM_EMAIL = "email";
     private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
+        String username = request.getParameter(PARAM_USERNAME);
+        String password = request.getParameter(PARAM_PASSWORD);
+        String email = request.getParameter(PARAM_EMAIL);
 
         User user = new User();
         user.setUsername(username);
@@ -27,13 +30,14 @@ public class RegisterUserCommand implements Command {
         Router router = new Router();
         try {
             userService.createUser(user);
-            request.getSession().setAttribute("message", "User successfully registered.");
             router.setPage(PageConstant.REGISTER_SUCCESS_PAGE);
+            router.setRedirect();
         } catch (ServiceException e) {
-            request.getSession().setAttribute("error", "Error registering user: " + e.getMessage());
+            request.getSession().setAttribute("error", e.getMessage());
             router.setPage(PageConstant.REGISTER_PAGE);
             router.setRedirect();
         }
         return router;
     }
+
 }
