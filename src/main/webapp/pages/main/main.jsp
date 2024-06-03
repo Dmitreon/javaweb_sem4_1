@@ -8,10 +8,9 @@
 <h1>Welcome!</h1>
 
 <a href="${pageContext.request.contextPath}/controller?command=VIEW_PROFILE">View Profile</a><br/>
-
 <a href="${pageContext.request.contextPath}/controller?command=ADD_USER">Add New User</a><br/>
-
 <a href="${pageContext.request.contextPath}/controller?command=VIEW_USERS">View List of Users</a><br/>
+<a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp">Add New Image</a><br/>
 
 <form action="${pageContext.request.contextPath}/controller" method="post">
     <input type="hidden" name="command" value="LOGOUT"/>

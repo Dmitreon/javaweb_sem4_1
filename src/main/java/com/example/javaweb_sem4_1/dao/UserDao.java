@@ -1,8 +1,10 @@
 package com.example.javaweb_sem4_1.dao;
 
+import com.example.javaweb_sem4_1.entity.Image;
 import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.DaoException;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface UserDao {
@@ -13,4 +15,9 @@ public interface UserDao {
     boolean delete(int userId) throws DaoException;
     boolean usernameExists(String username) throws DaoException;
     boolean emailExists(String email) throws DaoException;
+    boolean updateProfileImage(int userId, InputStream imageStream) throws DaoException;
+    InputStream getProfileImage(int userId) throws DaoException;
+    List<Image> getAvailableImages() throws DaoException;
+    boolean addPredefinedImage(InputStream imageStream) throws DaoException;
+    void setUserPredefinedImage(int userId, int imageId) throws DaoException;
 }

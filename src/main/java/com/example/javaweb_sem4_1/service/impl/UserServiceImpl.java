@@ -2,14 +2,19 @@ package com.example.javaweb_sem4_1.service.impl;
 
 import com.example.javaweb_sem4_1.dao.UserDao;
 import com.example.javaweb_sem4_1.dao.impl.UserDaoImpl;
+import com.example.javaweb_sem4_1.entity.Image;
 import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.util.FieldValidator;
+import com.example.javaweb_sem4_1.util.ImageValidator;
 import com.example.javaweb_sem4_1.util.UserValidator;
+import jakarta.servlet.http.Part;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -142,6 +147,31 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             logger.log(Level.SEVERE, "Error deleting user", e);
             throw new ServiceException("Error deleting user", e);
+        }
+    }
+
+    @Override
+    public boolean addPredefinedImage(Part filePart) throws ServiceException {
+        String validationError = ImageValidator.validateImage(filePart);
+        if (validationError != null) {
+            throw new ServiceException(validationError);
+        }
+
+        try (InputStream imageStream = filePart.getInputStream()) {
+            return userDao.addPredefinedImage(imageStream);
+        } catch (DaoException | IOException e) {
+            logger.log(Level.SEVERE, "Error while adding predefined image", e);
+            throw new ServiceException("Error while adding predefined image", e);
+        }
+    }
+
+    @Override
+    public List<Image> getAvailableImages() throws ServiceException {
+        try {
+            return userDao.getAvailableImages();
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Error while fetching available images", e);
+            throw new ServiceException("Error while fetching available images", e);
         }
     }
 }

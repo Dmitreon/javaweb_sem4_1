@@ -8,6 +8,7 @@ public final class SqlQuery {
     public static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
     public static final String CHECK_USERNAME_EXISTS = "SELECT COUNT(*) FROM users WHERE username = ?";
     public static final String CHECK_EMAIL_EXISTS = "SELECT COUNT(*) FROM users WHERE email = ?";
+    public static final String INSERT_PREDEFINED_IMAGE = "INSERT INTO predefined_images (image_data) VALUES (?)";
 
     private SqlQuery() {
         throw new AssertionError("Instantiating utility class.");

@@ -7,6 +7,9 @@ public class User extends AbstractEntity {
     private String username;
     private String password;
     private String email;
+    private int predefinedImageId; // Добавляем поле для хранения ID предопределенного изображения
+
+    // Getters и setters
 
     public int getId() {
         return id;
@@ -31,6 +34,7 @@ public class User extends AbstractEntity {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getEmail() {
         return email;
     }
@@ -39,17 +43,25 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
+    public int getPredefinedImageId() {
+        return predefinedImageId;
+    }
+
+    public void setPredefinedImageId(int predefinedImageId) {
+        this.predefinedImageId = predefinedImageId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email);
+        return id == user.id && predefinedImageId == user.predefinedImageId && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email);
+        return Objects.hash(id, username, password, email, predefinedImageId);
     }
 
     @Override
@@ -59,6 +71,7 @@ public class User extends AbstractEntity {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", predefinedImageId=" + predefinedImageId +
                 '}';
     }
 }

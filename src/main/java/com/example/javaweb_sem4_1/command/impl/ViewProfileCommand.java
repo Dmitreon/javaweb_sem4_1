@@ -24,6 +24,7 @@ public class ViewProfileCommand implements Command {
         try {
             User userToView = userService.findUserById(currentUser.getId());
             request.setAttribute("user", userToView);
+            request.setAttribute("profileImagePath", request.getContextPath() + "/resources/images/basic_picture.png");
             router.setPage(PageConstant.VIEW_PROFILE_PAGE);
         } catch (Exception e) {
             throw new CommandException("Error executing ViewProfileCommand", e);

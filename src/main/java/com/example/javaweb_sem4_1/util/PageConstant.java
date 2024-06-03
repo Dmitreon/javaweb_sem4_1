@@ -16,8 +16,9 @@ public final class PageConstant {
     public static final String DELETE_USER_SUCCESS_PAGE = "pages/admin/delete_user_success.jsp";
     public static final String CONFIRM_DELETE_ACCOUNT_PAGE = "pages/account/profile/confirm_delete_own_account.jsp";
     public static final String DELETE_ACCOUNT_SUCCESS_PAGE = "pages/account/profile/delete_account_success.jsp";
-
-
+    public static final String ADD_IMAGE_PAGE = "pages/admin/add_image.jsp";
+    public static final String ADD_IMAGE_SUCCESS_PAGE = "pages/admin/add_image_success.jsp";
+    public static final String VIEW_IMAGES_PAGE = "pages/account/profile/view_images.jsp";
 
     private PageConstant() {
         throw new AssertionError("Instantiating utility class.");

@@ -17,6 +17,8 @@ public enum CommandType {
     UPDATE_PASSWORD(new UpdatePasswordCommand()),
     DELETE_USER(new DeleteUserCommand()),
     DELETE_OWN_ACCOUNT(new DeleteOwnAccountCommand()),
+    ADD_PREDEFINED_IMAGE(new AddPredefinedImageCommand()),
+    VIEW_IMAGES(new ViewImagesCommand()),
     DEFAULT(new DefaultCommand());
 
     private static final Logger logger = LogManager.getLogger(CommandType.class);
