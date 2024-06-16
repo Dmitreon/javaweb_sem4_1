@@ -47,6 +47,9 @@
             text-decoration: underline;
         }
     </style>
+    <c:if test="${not empty refreshMetaTag}">
+        ${refreshMetaTag}
+    </c:if>
 </head>
 <body>
 <div class="profile-container">

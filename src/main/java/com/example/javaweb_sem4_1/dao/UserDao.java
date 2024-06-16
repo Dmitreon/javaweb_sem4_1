@@ -19,5 +19,6 @@ public interface UserDao {
     InputStream getProfileImage(int userId) throws DaoException;
     List<Image> getAvailableImages() throws DaoException;
     boolean addPredefinedImage(InputStream imageStream) throws DaoException;
-    void setUserPredefinedImage(int userId, int imageId) throws DaoException;
+    boolean updatePredefinedImageId(int userId, int imageId) throws DaoException;
+    Image getPredefinedImageById(int imageId) throws DaoException;
 }

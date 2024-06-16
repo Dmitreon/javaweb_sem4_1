@@ -22,6 +22,10 @@ public class AddUserCommand implements Command {
         String password = request.getParameter(PARAM_PASSWORD);
         String email = request.getParameter(PARAM_EMAIL);
 
+        if (username == null && password == null && email == null) {
+            return new Router(PageConstant.ADD_USERS_PAGE, Router.Type.FORWARD);
+        }
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
@@ -30,6 +34,7 @@ public class AddUserCommand implements Command {
         Router router = new Router();
         try {
             userService.createUser(user);
+            request.getSession().removeAttribute("error");
             router.setPage(PageConstant.ADD_USER_SUCCESS_PAGE);
             router.setType(Router.Type.REDIRECT);
         } catch (ServiceException e) {
@@ -39,5 +44,5 @@ public class AddUserCommand implements Command {
         }
         return router;
     }
-
 }
+

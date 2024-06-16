@@ -17,4 +17,6 @@ public interface UserService {
     boolean deleteUser(int id) throws ServiceException;
     boolean addPredefinedImage(Part filePart) throws ServiceException;
     List<Image> getAvailableImages() throws ServiceException;
+    void setUserPredefinedImage(int userId, int imageId) throws ServiceException;
+    Image getPredefinedImageById(int imageId) throws ServiceException;
 }

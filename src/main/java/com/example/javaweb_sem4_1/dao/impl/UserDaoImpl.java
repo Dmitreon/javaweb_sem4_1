@@ -12,12 +12,14 @@ import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_PREDEFINED_IMAGE_ID = "predefined_image_id";
 
     private static final UserDaoImpl instance = new UserDaoImpl();
 
@@ -30,137 +32,113 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 
     @Override
     public boolean insert(User user) throws DaoException {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SqlQuery.INSERT_USER);
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getEmail());
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error inserting user into database", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.INSERT_USER)) {
+                statement.setString(1, user.getUsername());
+                statement.setString(2, user.getPassword());
+                statement.setString(3, user.getEmail());
+                if (user.getPredefinedImageId() == null) {
+                    statement.setNull(4, Types.INTEGER);
+                } else {
+                    statement.setInt(4, user.getPredefinedImageId());
                 }
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     @Override
     public boolean delete(int userId) throws DaoException {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SqlQuery.DELETE_USER);
-            statement.setInt(1, userId);
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error deleting user from database", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    throw new DaoException("Failed to release connection", e);
-                }
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.DELETE_USER)) {
+                statement.setInt(1, userId);
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     @Override
     public List<User> findAll() throws DaoException {
-        Connection connection = null;
-        List<User> users = new ArrayList<>();
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SqlQuery.SELECT_ALL_USERS);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(COLUMN_ID));
-                user.setUsername(resultSet.getString(COLUMN_USERNAME));
-                user.setPassword(resultSet.getString(COLUMN_PASSWORD));
-                user.setEmail(resultSet.getString(COLUMN_EMAIL));
-                users.add(user);
-            }
-            return users;
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error retrieving user list from database", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            List<User> users = new ArrayList<>();
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.SELECT_ALL_USERS);
+                 ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    User user = new User();
+                    user.setId(resultSet.getInt(COLUMN_ID));
+                    user.setUsername(resultSet.getString(COLUMN_USERNAME));
+                    user.setPassword(resultSet.getString(COLUMN_PASSWORD));
+                    user.setEmail(resultSet.getString(COLUMN_EMAIL));
+                    int predefinedImageId = resultSet.getInt(COLUMN_PREDEFINED_IMAGE_ID);
+                    if (!resultSet.wasNull()) {
+                        user.setPredefinedImageId(predefinedImageId);
+                    }
+                    users.add(user);
                 }
+                return users;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     @Override
     public boolean update(User user) throws DaoException {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SqlQuery.UPDATE_USER);
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getEmail());
-            statement.setInt(4, user.getId());
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error updating user in the database", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.UPDATE_USER)) {
+                statement.setString(1, user.getUsername());
+                statement.setString(2, user.getPassword());
+                statement.setString(3, user.getEmail());
+                if (user.getPredefinedImageId() == null) {
+                    statement.setNull(4, Types.INTEGER);
+                } else {
+                    statement.setInt(4, user.getPredefinedImageId());
                 }
+                statement.setInt(5, user.getId());
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
 
+    @Override
     public User findBy(String field, String value) throws DaoException {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(String.format(SqlQuery.SELECT_USER_BY_FIELD, field));
-            if ("id".equals(field)) {
-                statement.setInt(1, Integer.parseInt(value));
-            } else {
-                statement.setString(1, value);
-            }
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt(COLUMN_ID));
-                user.setUsername(resultSet.getString(COLUMN_USERNAME));
-                user.setPassword(resultSet.getString(COLUMN_PASSWORD));
-                user.setEmail(resultSet.getString(COLUMN_EMAIL));
-                return user;
-            }
-            return null;
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error finding user by " + field, e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(String.format(SqlQuery.SELECT_USER_BY_FIELD, field))) {
+                if ("id".equals(field)) {
+                    statement.setInt(1, Integer.parseInt(value));
+                } else {
+                    statement.setString(1, value);
                 }
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        User user = new User();
+                        user.setId(resultSet.getInt(COLUMN_ID));
+                        user.setUsername(resultSet.getString(COLUMN_USERNAME));
+                        user.setPassword(resultSet.getString(COLUMN_PASSWORD));
+                        user.setEmail(resultSet.getString(COLUMN_EMAIL));
+                        int predefinedImageId = resultSet.getInt(COLUMN_PREDEFINED_IMAGE_ID);
+                        if (!resultSet.wasNull()) {
+                            user.setPredefinedImageId(predefinedImageId);
+                        }
+                        return user;
+                    }
+                    return null;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
+
     @Override
     public boolean usernameExists(String username) throws DaoException {
         return fieldExists(SqlQuery.CHECK_USERNAME_EXISTS, username);
@@ -172,180 +150,132 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     private boolean fieldExists(String query, String fieldValue) throws DaoException {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(query);
-            try {
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, fieldValue);
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0;
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt(1) > 0;
+                    }
                 }
-            } finally {
-                if (statement != null) {
-                    statement.close();
-                }
+                return false;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error checking field existence", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    throw new DaoException("Failed to release connection", e);
-                }
-            }
-        }
-        return false;
+        });
     }
 
     @Override
     public boolean updateProfileImage(int userId, InputStream imageStream) throws DaoException {
-        String sql = "UPDATE users SET profile_image = ? WHERE id = ?";
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            if (imageStream != null) {
-                statement.setBinaryStream(1, imageStream);
-            } else {
-                statement.setNull(1, java.sql.Types.BINARY);
-            }
-            statement.setInt(2, userId);
-            int result = statement.executeUpdate();
-            return result > 0;
-        } catch (SQLException e) {
-            throw new DaoException("Error updating user profile image", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new DaoException("Thread was interrupted", e);
-        } finally {
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.UPDATE_PROFILE_IMAGE)) {
+                if (imageStream != null) {
+                    statement.setBinaryStream(1, imageStream);
+                } else {
+                    statement.setNull(1, java.sql.Types.BINARY);
                 }
+                statement.setInt(2, userId);
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     @Override
     public InputStream getProfileImage(int userId) throws DaoException {
-        String sql = "SELECT profile_image FROM users WHERE id = ?";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setInt(1, userId);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getBinaryStream("profile_image");
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new DaoException("Error fetching user profile image", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new DaoException("Thread was interrupted during database operation", e);
-        } finally {
-            if (resultSet != null) try { resultSet.close(); } catch (SQLException e) { /* log error */ }
-            if (statement != null) try { statement.close(); } catch (SQLException e) { /* log error */ }
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.SELECT_PROFILE_IMAGE)) {
+                statement.setInt(1, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getBinaryStream("profile_image");
+                    }
+                    return null;
                 }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
 
     @Override
     public List<Image> getAvailableImages() throws DaoException {
-        List<Image> images = new ArrayList<>();
-        String sql = "SELECT id, image_data FROM predefined_images";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                images.add(new Image(resultSet.getInt("id"), resultSet.getBytes("image_data")));
-            }
-            return images;
-        } catch (SQLException e) {
-            throw new DaoException("Error fetching predefined images", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new DaoException("Thread was interrupted", e);
-        } finally {
-            if (resultSet != null) try { resultSet.close(); } catch (SQLException e) { /* log error */ }
-            if (statement != null) try { statement.close(); } catch (SQLException e) { /* log error */ }
-            if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new DaoException("Failed to release connection", e);
+        return executeWithConnection(connection -> {
+            List<Image> images = new ArrayList<>();
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.SELECT_AVAILABLE_IMAGES);
+                 ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    images.add(new Image(resultSet.getInt("id"), resultSet.getBytes("image_data")));
                 }
+                return images;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        }
+        });
     }
-
 
     @Override
     public boolean addPredefinedImage(InputStream imageStream) throws DaoException {
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.INSERT_PREDEFINED_IMAGE)) {
+                if (imageStream != null) {
+                    statement.setBinaryStream(1, imageStream);
+                } else {
+                    statement.setNull(1, java.sql.Types.BINARY);
+                }
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public boolean updatePredefinedImageId(int userId, int imageId) throws DaoException {
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.UPDATE_PREDEFINED_IMAGE_ID)) {
+                statement.setInt(1, imageId);
+                statement.setInt(2, userId);
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public Image getPredefinedImageById(int imageId) throws DaoException {
+        return executeWithConnection(connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(SqlQuery.SELECT_PREDEFINED_IMAGE_BY_ID)) {
+                statement.setInt(1, imageId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return new Image(resultSet.getInt("id"), resultSet.getBytes("image_data"));
+                    }
+                    return null;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private <R> R executeWithConnection(Function<Connection, R> function) throws DaoException {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SqlQuery.INSERT_PREDEFINED_IMAGE);
-            if (imageStream != null) {
-                statement.setBinaryStream(1, imageStream);
-            } else {
-                statement.setNull(1, java.sql.Types.BINARY);
-            }
-            int result = statement.executeUpdate();
-            return result > 0;
-        } catch (SQLException e) {
-            throw new DaoException("Error adding predefined image", e);
+            return function.apply(connection);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new DaoException("Thread was interrupted", e);
         } finally {
             if (connection != null) {
-                try {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new DaoException("Failed to release connection", e);
-                }
+                closeConnection(connection);
             }
         }
     }
-
-    @Override
-    public void setUserPredefinedImage(int userId, int imageId) throws DaoException {
-        String sql = "UPDATE users SET predefined_image_id = ? WHERE id = ?";
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, imageId);
-            statement.setInt(2, userId);
-            int result = statement.executeUpdate();
-            if (result == 0) {
-                throw new DaoException("Failed to update user's predefined image.");
-            }
-        } catch (SQLException | InterruptedException e) {
-            throw new DaoException("Error updating user's predefined image", e);
-        }
-    }
-
 }

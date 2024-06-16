@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Override
     public List<User> retrieveAllUsers() throws ServiceException {
         logger.log(Level.INFO, "Beginning to retrieve all users.");
@@ -95,7 +94,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Override
     public User findUserById(int id) throws ServiceException {
         try {
@@ -139,7 +137,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Override
     public boolean deleteUser(int id) throws ServiceException {
         try {
@@ -172,6 +169,26 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             logger.log(Level.SEVERE, "Error while fetching available images", e);
             throw new ServiceException("Error while fetching available images", e);
+        }
+    }
+
+    @Override
+    public void setUserPredefinedImage(int userId, int imageId) throws ServiceException {
+        try {
+            if (!userDao.updatePredefinedImageId(userId, imageId)) {
+                throw new ServiceException("Failed to update user's predefined image");
+            }
+        } catch (DaoException e) {
+            throw new ServiceException("Error setting predefined image for user", e);
+        }
+    }
+
+    @Override
+    public Image getPredefinedImageById(int imageId) throws ServiceException {
+        try {
+            return userDao.getPredefinedImageById(imageId);
+        } catch (DaoException e) {
+            throw new ServiceException("Error retrieving predefined image", e);
         }
     }
 }

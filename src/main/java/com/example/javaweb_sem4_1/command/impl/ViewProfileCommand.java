@@ -2,8 +2,10 @@ package com.example.javaweb_sem4_1.command.impl;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
+import com.example.javaweb_sem4_1.entity.Image;
 import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.CommandException;
+import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
 import com.example.javaweb_sem4_1.util.PageConstant;
@@ -24,9 +26,17 @@ public class ViewProfileCommand implements Command {
         try {
             User userToView = userService.findUserById(currentUser.getId());
             request.setAttribute("user", userToView);
-            request.setAttribute("profileImagePath", request.getContextPath() + "/resources/images/basic_picture.png");
+
+            String profileImagePath;
+            if (userToView.getPredefinedImageId() == null) {
+                profileImagePath = request.getContextPath() + "/resources/images/basic_picture.png";
+            } else {
+                Image profileImage = userService.getPredefinedImageById(userToView.getPredefinedImageId());
+                profileImagePath = "data:image/jpeg;base64," + profileImage.getBase64Data();
+            }
+            request.setAttribute("profileImagePath", profileImagePath);
             router.setPage(PageConstant.VIEW_PROFILE_PAGE);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             throw new CommandException("Error executing ViewProfileCommand", e);
         }
         return router;

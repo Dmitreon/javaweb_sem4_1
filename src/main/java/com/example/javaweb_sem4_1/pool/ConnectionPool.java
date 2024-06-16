@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ConnectionPool {
-    private static final Logger logger = Logger.getLogger(ConnectionPool.class.getName());
+    private static final Logger logger = LogManager.getLogger(ConnectionPool.class.getName());
     private static final int MAX_POOL_SIZE = 8;
     private static ConnectionPool instance;
     private BlockingQueue<Connection> freeConnections = new LinkedBlockingQueue<>(MAX_POOL_SIZE);
@@ -20,7 +20,7 @@ public class ConnectionPool {
         try {
             DriverManager.registerDriver(new org.postgresql.Driver());
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Could not register database driver", e);
+            logger.error("Could not register database driver", e);
             throw new ExceptionInInitializerError(e);
         }
     }
@@ -31,7 +31,7 @@ public class ConnectionPool {
                 Connection connection = createConnection();
                 freeConnections.add(connection);
             } catch (SQLException e) {
-                logger.log(Level.SEVERE, "Could not create database connection", e);
+                logger.error("Could not create database connection", e);
                 throw new RuntimeException(e);
             }
         }
@@ -45,9 +45,13 @@ public class ConnectionPool {
         return DriverManager.getConnection(url, prop);
     }
 
-    public static synchronized ConnectionPool getInstance() {
+    public static ConnectionPool getInstance() {
         if (instance == null) {
-            instance = new ConnectionPool();
+            synchronized (ConnectionPool.class) {
+                if (instance == null) {
+                    instance = new ConnectionPool();
+                }
+            }
         }
         return instance;
     }
@@ -58,9 +62,15 @@ public class ConnectionPool {
         return connection;
     }
 
-    public void releaseConnection(Connection connection) throws InterruptedException {
-        usedConnections.remove(connection);
-        freeConnections.put(connection);
+    public void releaseConnection(Connection connection) throws InterruptedException, SQLException {
+        if (connection != null) {
+            usedConnections.remove(connection);
+            if (!connection.isClosed() && connection.isValid(2)) {
+                freeConnections.put(connection);
+            } else {
+                closeConnection(connection);
+            }
+        }
     }
 
     public void destroyPool() {
@@ -79,7 +89,7 @@ public class ConnectionPool {
                 connection.close();
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Could not close database connection", e);
+            logger.error("Could not close database connection", e);
         }
     }
 
@@ -88,7 +98,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.log(Level.SEVERE, "Could not deregister driver", e);
+                logger.error("Could not deregister driver", e);
             }
         });
     }

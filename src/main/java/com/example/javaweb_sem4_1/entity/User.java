@@ -7,10 +7,7 @@ public class User extends AbstractEntity {
     private String username;
     private String password;
     private String email;
-    private int predefinedImageId; // Добавляем поле для хранения ID предопределенного изображения
-
-    // Getters и setters
-
+    private Integer predefinedImageId;
     public int getId() {
         return id;
     }
@@ -43,11 +40,11 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-    public int getPredefinedImageId() {
+    public Integer getPredefinedImageId() {
         return predefinedImageId;
     }
 
-    public void setPredefinedImageId(int predefinedImageId) {
+    public void setPredefinedImageId(Integer predefinedImageId) {
         this.predefinedImageId = predefinedImageId;
     }
 
@@ -56,7 +53,7 @@ public class User extends AbstractEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && predefinedImageId == user.predefinedImageId && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email);
+        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(predefinedImageId, user.predefinedImageId);
     }
 
     @Override
