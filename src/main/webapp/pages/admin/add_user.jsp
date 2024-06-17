@@ -1,8 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
 <head>
-    <title>Add New User</title>
+    <title><fmt:message key="add_new_user_title"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,22 +30,22 @@
 </head>
 <body>
 <div class="form-container">
-    <h2>Add New User</h2>
+    <h2><fmt:message key="add_new_user_title"/></h2>
     <c:if test="${not empty sessionScope.error}">
-        <div class="error-message">${sessionScope.error}</div>
+        <div class="error-message"><fmt:message key="add_user_error_message"><fmt:param value="${sessionScope.error}"/></fmt:message></div>
         <c:remove var="error" scope="session"/>
     </c:if>
     <form action="${pageContext.request.contextPath}/controller" method="post">
         <input type="hidden" name="command" value="ADD_USER"/>
-        <label for="username">Username:</label>
+        <label for="username"><fmt:message key="username"/>:</label>
         <input type="text" id="username" name="username" required/><br/>
-        <label for="password">Password:</label>
+        <label for="password"><fmt:message key="password"/>:</label>
         <input type="password" id="password" name="password" required/><br/>
-        <label for="email">Email:</label>
+        <label for="email"><fmt:message key="email"/>:</label>
         <input type="email" id="email" name="email" required/><br/>
-        <input type="submit" value="Add User"/>
+        <input type="submit" value="<fmt:message key="add_user_button"/>"/>
     </form>
-    <a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
+    <a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back"/></a>
 </div>
 </body>
 </html>

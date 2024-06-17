@@ -38,6 +38,15 @@
     </filter-mapping>
 
     <filter>
+        <filter-name>LocalizationFilter</filter-name>
+        <filter-class>com.example.javaweb_sem4_1.filter.LocalizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LocalizationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
         <filter-name>AuthorizationFilter</filter-name>
         <filter-class>com.example.javaweb_sem4_1.filter.AuthorizationFilter</filter-class>
     </filter>

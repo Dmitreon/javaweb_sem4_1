@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>User Profile</title>
+    <title><fmt:message key="user_profile"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,22 +49,30 @@
             text-decoration: underline;
         }
     </style>
-    <c:if test="${not empty refreshMetaTag}">
-        ${refreshMetaTag}
-    </c:if>
+    <script>
+        function changeLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url.href;
+        }
+    </script>
 </head>
 <body>
 <div class="profile-container">
     <img src="${profileImagePath}" alt="Profile Picture" class="profile-picture">
-    <h2>User Profile</h2>
+    <h2><fmt:message key="user_profile"/></h2>
     <div class="profile-details">
-        <p><b>Username:</b> ${user.username}</p>
-        <p><b>Email:</b> ${user.email}</p>
-        <a href="${pageContext.request.contextPath}/controller?command=UPDATE_PASSWORD">Edit Password</a>
-        <a href="${pageContext.request.contextPath}/controller?command=DELETE_OWN_ACCOUNT">Delete My Account</a>
-        <a href="${pageContext.request.contextPath}/controller?command=VIEW_IMAGES">View Available Images</a>
-        <a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
+        <p><b><fmt:message key="username"/>:</b> ${user.username}</p>
+        <p><b><fmt:message key="email"/>:</b> ${user.email}</p>
+        <a href="${pageContext.request.contextPath}/controller?command=UPDATE_PASSWORD"><fmt:message key="edit_password"/></a>
+        <a href="${pageContext.request.contextPath}/controller?command=DELETE_OWN_ACCOUNT"><fmt:message key="delete_account"/></a>
+        <a href="${pageContext.request.contextPath}/controller?command=VIEW_IMAGES"><fmt:message key="view_images"/></a>
+        <a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back"/></a>
     </div>
+    <p><fmt:message key="change_language"/>:
+        <a href="javascript:void(0)" onclick="changeLanguage('en')">English</a> |
+        <a href="javascript:void(0)" onclick="changeLanguage('ru')">Русский</a>
+    </p>
 </div>
 </body>
 </html>

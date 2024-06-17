@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>View Images</title>
+    <title><fmt:message key="view_images_title"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,8 +32,7 @@
     </style>
 </head>
 <body>
-<h1>Available Images</h1>
-
+<h1><fmt:message key="view_images_title"/></h1>
 <c:if test="${not empty images}">
     <div class="image-gallery">
         <c:forEach var="image" items="${images}">
@@ -40,17 +41,15 @@
                 <form action="${pageContext.request.contextPath}/controller" method="post">
                     <input type="hidden" name="command" value="SET_USER_IMAGE"/>
                     <input type="hidden" name="imageId" value="${image.id}"/>
-                    <input type="submit" value="Set as Profile Picture"/>
+                    <input type="submit" value="<fmt:message key="set_as_profile_picture"/>"/>
                 </form>
             </div>
         </c:forEach>
     </div>
 </c:if>
-
 <c:if test="${empty images}">
-    <p>No images available.</p>
+    <p><fmt:message key="no_images_available"/></p>
 </c:if>
-
-<a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back to Main Page</a>
+<a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back_to_main"/></a>
 </body>
 </html>

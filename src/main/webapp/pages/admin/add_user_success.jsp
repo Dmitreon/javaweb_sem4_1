@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>Registration Success</title>
+    <title><fmt:message key="registration_success_title"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,9 +28,9 @@
 </head>
 <body>
 <div class="success-container">
-    <h2>Registration Successful</h2>
-    <p>User has been successfully registered.</p>
-    <a href="${pageContext.request.contextPath}/pages/main/main.jsp">Return to main Page</a>
+    <h2><fmt:message key="registration_success_title"/></h2>
+    <p><fmt:message key="registration_success_message"/></p>
+    <a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="return_to_main"/></a>
 </div>
 </body>
 </html>

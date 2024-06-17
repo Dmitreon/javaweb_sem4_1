@@ -1,15 +1,9 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: 37063
-  Date: 20.03.2024
-  Time: 15:15
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <html>
 <head>
-    <title>500 - Internal Server Error</title>
+    <title><fmt:message key="error_500_title"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,15 +32,15 @@
 </head>
 <body>
 <div class="error-container">
-    <h2>500 - Internal Server Error</h2>
-    <p>Request from: ${pageContext.errorData.requestURI} is failed</p>
-    <p>Servlet name: ${pageContext.errorData.servletName}</p>
-    <p>Status code: ${pageContext.errorData.statusCode}</p>
-    <p>Exception: ${pageContext.exception}</p>
+    <h2><fmt:message key="error_500_title"/></h2>
+    <p><fmt:message key="request_failed"><fmt:param value="${pageContext.errorData.requestURI}"/></fmt:message></p>
+    <p><fmt:message key="servlet_name"><fmt:param value="${pageContext.errorData.servletName}"/></fmt:message></p>
+    <p><fmt:message key="status_code"><fmt:param value="${pageContext.errorData.statusCode}"/></fmt:message></p>
+    <p><fmt:message key="exception"><fmt:param value="${pageContext.exception}"/></fmt:message></p>
     <div class="error-details">
-        <p>Message from exception: ${error_msg}</p>
+        <p><fmt:message key="exception_message"><fmt:param value="${error_msg}"/></fmt:message></p>
     </div>
-    <button onclick="history.back()">Go Back</button>
+    <button onclick="history.back()"><fmt:message key="go_back_button"/></button>
 </div>
 </body>
 </html>

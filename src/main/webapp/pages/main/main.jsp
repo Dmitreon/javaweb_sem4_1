@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>Main Page</title>
+    <title><fmt:message key="welcome"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,20 +33,20 @@
 </head>
 <body>
 <div class="main-container">
-    <h2>Welcome!</h2>
-    <a href="${pageContext.request.contextPath}/controller?command=VIEW_PROFILE">View Profile</a>
-    <a href="${pageContext.request.contextPath}/controller?command=VIEW_USERS">View List of Users</a>
+    <h2><fmt:message key="welcome"/></h2>
+    <a href="${pageContext.request.contextPath}/controller?command=VIEW_PROFILE"><fmt:message key="view_profile"/></a>
+    <a href="${pageContext.request.contextPath}/controller?command=VIEW_USERS"><fmt:message key="view_users"/></a>
 
     <c:choose>
         <c:when test="${not empty sessionScope.currentUser and sessionScope.currentUser.role == 'admin'}">
-            <a href="${pageContext.request.contextPath}/controller?command=ADD_USER">Add New User</a>
-            <a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp">Add New Image</a>
+            <a href="${pageContext.request.contextPath}/controller?command=ADD_USER"><fmt:message key="add_user"/></a>
+            <a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp"><fmt:message key="add_image"/></a>
         </c:when>
     </c:choose>
 
     <form action="${pageContext.request.contextPath}/controller" method="post">
         <input type="hidden" name="command" value="LOGOUT"/>
-        <input type="submit" value="Log Out"/>
+        <input type="submit" value="<fmt:message key="logout"/>"/>
     </form>
 </div>
 </body>

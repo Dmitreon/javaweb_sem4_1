@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>Add New Image</title>
+    <title><fmt:message key="add_new_image_title"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,16 +33,16 @@
 </head>
 <body>
 <div class="form-container">
-    <h2>Add New Image</h2>
+    <h2><fmt:message key="add_new_image_title"/></h2>
     <form action="${pageContext.request.contextPath}/controller" method="post" enctype="multipart/form-data">
         <input type="hidden" name="command" value="ADD_PREDEFINED_IMAGE"/>
         <input type="file" name="image" accept="image/*" required/><br/>
-        <input type="submit" value="Upload"/>
+        <input type="submit" value="<fmt:message key="add_image_button"/>"/>
     </form>
     <c:if test="${not empty error}">
         <div class="error-message">${error}</div>
     </c:if>
-    <a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
+    <a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back"/></a>
 </div>
 </body>
 </html>

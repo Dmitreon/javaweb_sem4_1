@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>Image Added</title>
+    <title><fmt:message key="add_image_success_title"/></title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,9 +29,9 @@
 </head>
 <body>
 <div class="success-container">
-    <h2>Image added successfully!</h2>
-    <a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp">Add another image</a><br/>
-    <a href="${pageContext.request.contextPath}/pages/main/main.jsp">Back</a>
+    <h2><fmt:message key="add_image_success_title"/></h2>
+    <a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp"><fmt:message key="add_another_image"/></a><br/>
+    <a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back"/></a>
 </div>
 </body>
 </html>
