@@ -25,6 +25,7 @@ public class LoginCommand implements Command {
             User authenticatedUser = userService.authenticate(login, password);
             if (authenticatedUser != null) {
                 session.setAttribute("currentUser", authenticatedUser);
+                session.removeAttribute("login_msg");
                 router.setPage(PageConstant.MAIN_PAGE);
                 router.setRedirect();
             } else {

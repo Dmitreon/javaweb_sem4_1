@@ -42,8 +42,9 @@
         <label for="pass"><fmt:message key="password"/>:</label>
         <input type="password" id="pass" name="pass" value=""/><br/>
         <input type="submit" name="sub" value="<fmt:message key="login"/>"/><br/>
-        <c:if test="${not empty login_msg}">
-            <div class="error-message">${login_msg}</div>
+        <c:if test="${not empty sessionScope.login_msg}">
+            <div class="error-message">${sessionScope.login_msg}</div>
+            <c:remove var="login_msg" scope="session"/>
         </c:if>
     </form>
     <p><fmt:message key="register_here"/> <a href="${pageContext.request.contextPath}/pages/account/register/register.jsp"><fmt:message key="register"/></a></p>

@@ -9,6 +9,7 @@ import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
 import com.example.javaweb_sem4_1.util.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class RegisterUserCommand implements Command {
     private static final String PARAM_USERNAME = "username";
@@ -28,16 +29,18 @@ public class RegisterUserCommand implements Command {
         user.setEmail(email);
 
         Router router = new Router();
+        HttpSession session = request.getSession();
         try {
             userService.createUser(user);
+            session.removeAttribute("login_msg");
+            session.removeAttribute("error");
             router.setPage(PageConstant.REGISTER_SUCCESS_PAGE);
             router.setRedirect();
         } catch (ServiceException e) {
-            request.getSession().setAttribute("error", e.getMessage());
+            session.setAttribute("error", e.getMessage());
             router.setPage(PageConstant.REGISTER_PAGE);
             router.setRedirect();
         }
         return router;
     }
-
 }
