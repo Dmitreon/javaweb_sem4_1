@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
             }
             String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             user.setPassword(hashedPassword);
+            user.setRole("user");
             boolean isInserted = userDao.insert(user);
             if (!isInserted) {
                 throw new ServiceException("User creation failed: No rows affected.");

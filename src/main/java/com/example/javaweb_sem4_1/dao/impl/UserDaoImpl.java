@@ -20,6 +20,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PREDEFINED_IMAGE_ID = "predefined_image_id";
+    private static final String COLUMN_ROLE = "role"; // Добавлено поле для роли
 
     private static final UserDaoImpl instance = new UserDaoImpl();
 
@@ -42,6 +43,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 } else {
                     statement.setInt(4, user.getPredefinedImageId());
                 }
+                statement.setString(5, user.getRole()); // Установка роли
                 int rowsAffected = statement.executeUpdate();
                 return rowsAffected > 0;
             } catch (SQLException e) {
@@ -79,6 +81,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     if (!resultSet.wasNull()) {
                         user.setPredefinedImageId(predefinedImageId);
                     }
+                    user.setRole(resultSet.getString(COLUMN_ROLE)); // Установка роли
                     users.add(user);
                 }
                 return users;
@@ -100,7 +103,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 } else {
                     statement.setInt(4, user.getPredefinedImageId());
                 }
-                statement.setInt(5, user.getId());
+                statement.setString(5, user.getRole());
+                statement.setInt(6, user.getId());
                 int rowsAffected = statement.executeUpdate();
                 return rowsAffected > 0;
             } catch (SQLException e) {
@@ -129,6 +133,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                         if (!resultSet.wasNull()) {
                             user.setPredefinedImageId(predefinedImageId);
                         }
+                        user.setRole(resultSet.getString(COLUMN_ROLE));
                         return user;
                     }
                     return null;

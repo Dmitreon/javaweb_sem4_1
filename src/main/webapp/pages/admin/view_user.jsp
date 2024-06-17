@@ -24,8 +24,10 @@
             <td>********</td>
             <td>${user.email}</td>
             <td>
-                <c:if test="${user.id != sessionScope.currentUser.id}">
-                    <a href="${pageContext.request.contextPath}/pages/admin/confirm_delete.jsp?userId=${user.id}">Delete</a>
+                <c:if test="${sessionScope.currentUser.role == 'admin'}">
+                    <c:if test="${user.id != sessionScope.currentUser.id}">
+                        <a href="${pageContext.request.contextPath}/pages/admin/confirm_delete.jsp?userId=${user.id}">Delete</a>
+                    </c:if>
                 </c:if>
             </td>
         </tr>

@@ -8,16 +8,28 @@ import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
 import com.example.javaweb_sem4_1.util.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class DeleteUserCommand implements Command {
     private UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        Router router = new Router();
+
+        // Проверка, что текущий пользователь - администратор
+        if (currentUser == null || !"admin".equals(currentUser.getRole())) {
+            router.setPage(PageConstant.INDEX_PAGE);
+            router.setType(Router.Type.REDIRECT);
+            return router;
+        }
+
         String username = request.getParameter("username");
         int userId = Integer.parseInt(request.getParameter("userId"));
 
-        Router router = new Router();
         try {
             User user = userService.findUserById(userId);
             if (user != null && user.getUsername().equals(username)) {

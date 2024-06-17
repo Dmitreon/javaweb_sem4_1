@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Main Page</title>
@@ -33,9 +33,14 @@
 <div class="main-container">
     <h2>Welcome!</h2>
     <a href="${pageContext.request.contextPath}/controller?command=VIEW_PROFILE">View Profile</a>
-    <a href="${pageContext.request.contextPath}/controller?command=ADD_USER">Add New User</a>
     <a href="${pageContext.request.contextPath}/controller?command=VIEW_USERS">View List of Users</a>
-    <a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp">Add New Image</a>
+
+    <c:choose>
+        <c:when test="${not empty sessionScope.currentUser and sessionScope.currentUser.role == 'admin'}">
+            <a href="${pageContext.request.contextPath}/controller?command=ADD_USER">Add New User</a>
+            <a href="${pageContext.request.contextPath}/pages/admin/add_image.jsp">Add New Image</a>
+        </c:when>
+    </c:choose>
 
     <form action="${pageContext.request.contextPath}/controller" method="post">
         <input type="hidden" name="command" value="LOGOUT"/>

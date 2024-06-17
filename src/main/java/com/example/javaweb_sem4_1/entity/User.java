@@ -8,6 +8,9 @@ public class User extends AbstractEntity {
     private String password;
     private String email;
     private Integer predefinedImageId;
+    private String role;
+
+    // Геттеры и сеттеры
     public int getId() {
         return id;
     }
@@ -48,17 +51,30 @@ public class User extends AbstractEntity {
         this.predefinedImageId = predefinedImageId;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(predefinedImageId, user.predefinedImageId);
+        return id == user.id &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(predefinedImageId, user.predefinedImageId) &&
+                Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email, predefinedImageId);
+        return Objects.hash(id, username, password, email, predefinedImageId, role);
     }
 
     @Override
@@ -69,6 +85,7 @@ public class User extends AbstractEntity {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", predefinedImageId=" + predefinedImageId +
+                ", role='" + role + '\'' +
                 '}';
     }
 }
