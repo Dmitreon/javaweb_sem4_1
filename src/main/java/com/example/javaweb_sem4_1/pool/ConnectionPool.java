@@ -1,5 +1,6 @@
 package com.example.javaweb_sem4_1.pool;
 
+import com.example.javaweb_sem4_1.security.DatabaseConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,10 +39,10 @@ public class ConnectionPool {
     }
 
     private Connection createConnection() throws SQLException {
-        String url = "jdbc:postgresql://localhost:5432/java_web";
+        String url = DatabaseConfig.DB_URL;
         Properties prop = new Properties();
-        prop.put("user", "postgres");
-        prop.put("password", "user123");
+        prop.put("user", DatabaseConfig.DB_USER);
+        prop.put("password", DatabaseConfig.DB_PASSWORD);
         return DriverManager.getConnection(url, prop);
     }
 

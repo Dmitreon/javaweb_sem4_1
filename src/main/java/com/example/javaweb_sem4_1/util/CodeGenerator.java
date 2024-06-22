@@ -1,11 +1,11 @@
 package com.example.javaweb_sem4_1.util;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class CodeGenerator {
-    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Random random = new Random();
 
     public static int generate() {
-        return secureRandom.nextInt(9000) + 1000;
+        return 100000 + random.nextInt(900000);
     }
 }
