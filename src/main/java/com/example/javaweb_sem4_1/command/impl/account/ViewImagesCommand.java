@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.command.impl;
+package com.example.javaweb_sem4_1.command.impl.account;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
@@ -7,7 +7,8 @@ import com.example.javaweb_sem4_1.exception.CommandException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -21,7 +22,7 @@ public class ViewImagesCommand implements Command {
         Router router = new Router();
         try {
             List<Image> images = userService.getAvailableImages();
-            request.setAttribute("images", images);
+            request.setAttribute(AttributeConstant.IMAGES, images);
             router.setPage(PageConstant.VIEW_IMAGES_PAGE);
             router.setType(Router.Type.FORWARD);
         } catch (ServiceException e) {

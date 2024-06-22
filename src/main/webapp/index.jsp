@@ -39,8 +39,8 @@
         <input type="hidden" name="command" value="login"/>
         <label for="login"><fmt:message key="username"/>:</label>
         <input type="text" id="login" name="login" value=""/><br/>
-        <label for="pass"><fmt:message key="password"/>:</label>
-        <input type="password" id="pass" name="pass" value=""/><br/>
+        <label for="password"><fmt:message key="password"/>:</label>
+        <input type="password" id="password" name="password" value=""/><br/>
         <input type="submit" name="sub" value="<fmt:message key="login"/>"/><br/>
         <c:if test="${not empty sessionScope.login_msg}">
             <div class="error-message">${sessionScope.login_msg}</div>

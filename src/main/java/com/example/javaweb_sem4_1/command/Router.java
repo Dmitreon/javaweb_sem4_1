@@ -1,6 +1,6 @@
 package com.example.javaweb_sem4_1.command;
 
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 
 public class Router {
     private String page;

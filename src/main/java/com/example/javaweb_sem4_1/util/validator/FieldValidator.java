@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.util;
+package com.example.javaweb_sem4_1.util.validator;
 
 public class FieldValidator {
 

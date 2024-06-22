@@ -4,8 +4,8 @@ import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.CommandType;
 import com.example.javaweb_sem4_1.command.Router;
 import com.example.javaweb_sem4_1.exception.CommandException;
-import com.example.javaweb_sem4_1.pool.ConnectionPool;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.pool.impl.ConnectionPoolImpl;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -77,6 +77,6 @@ public class Controller extends HttpServlet {
 
     @Override
     public void destroy() {
-        ConnectionPool.getInstance().destroyPool();
+        ConnectionPoolImpl.getInstance().destroyPool();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.command.impl;
+package com.example.javaweb_sem4_1.command.impl.auth;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
@@ -7,7 +7,8 @@ import com.example.javaweb_sem4_1.exception.CommandException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -17,14 +18,14 @@ public class VerifyCodeCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        String enteredCode = request.getParameter("verificationCode");
-        Integer sessionCode = (Integer) session.getAttribute("verificationCode");
+        String enteredCode = request.getParameter(AttributeConstant.VERIFICATION_CODE);
+        Integer sessionCode = (Integer) session.getAttribute(AttributeConstant.VERIFICATION_CODE);
 
         Router router = new Router();
         if (enteredCode != null && Integer.parseInt(enteredCode) == sessionCode) {
-            String username = (String) session.getAttribute("username");
-            String password = (String) session.getAttribute("password");
-            String email = (String) session.getAttribute("email");
+            String username = (String) session.getAttribute(AttributeConstant.USERNAME);
+            String password = (String) session.getAttribute(AttributeConstant.PASSWORD);
+            String email = (String) session.getAttribute(AttributeConstant.EMAIL);
 
             User user = new User();
             user.setUsername(username);
@@ -35,11 +36,11 @@ public class VerifyCodeCommand implements Command {
                 userService.createUser(user);
                 router.setPage(PageConstant.REGISTER_SUCCESS_PAGE);
             } catch (ServiceException e) {
-                session.setAttribute("error", e.getMessage());
+                session.setAttribute(AttributeConstant.ERROR, e.getMessage());
                 router.setPage(PageConstant.REGISTER_PAGE);
             }
         } else {
-            request.setAttribute("error", "Invalid verification code");
+            request.setAttribute(AttributeConstant.ERROR, "Invalid verification code");
             router.setPage(PageConstant.VERIFICATION_PAGE);
         }
         router.setRedirect();

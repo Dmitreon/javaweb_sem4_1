@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.util;
+package com.example.javaweb_sem4_1.util.validator;
 
 import jakarta.servlet.http.Part;
 

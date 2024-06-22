@@ -5,14 +5,12 @@ import com.example.javaweb_sem4_1.dao.UserDao;
 import com.example.javaweb_sem4_1.entity.Image;
 import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.DaoException;
-import com.example.javaweb_sem4_1.pool.ConnectionPool;
-import com.example.javaweb_sem4_1.util.SqlQuery;
+import com.example.javaweb_sem4_1.util.constant.SqlQuery;
 
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String COLUMN_ID = "id";
@@ -20,11 +18,12 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PREDEFINED_IMAGE_ID = "predefined_image_id";
-    private static final String COLUMN_ROLE = "role"; // Добавлено поле для роли
+    private static final String COLUMN_ROLE = "role";
 
     private static final UserDaoImpl instance = new UserDaoImpl();
 
     private UserDaoImpl() {
+        super();
     }
 
     public static UserDaoImpl getInstance() {
@@ -43,7 +42,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 } else {
                     statement.setInt(4, user.getPredefinedImageId());
                 }
-                statement.setString(5, user.getRole()); // Установка роли
+                statement.setString(5, user.getRole());
                 int rowsAffected = statement.executeUpdate();
                 return rowsAffected > 0;
             } catch (SQLException e) {
@@ -170,6 +169,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         });
     }
 
+    //todo
     @Override
     public boolean updateProfileImage(int userId, InputStream imageStream) throws DaoException {
         return executeWithConnection(connection -> {
@@ -188,6 +188,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         });
     }
 
+    //todo
     @Override
     public InputStream getProfileImage(int userId) throws DaoException {
         return executeWithConnection(connection -> {
@@ -237,7 +238,6 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             }
         });
     }
-
     @Override
     public boolean updatePredefinedImageId(int userId, int imageId) throws DaoException {
         return executeWithConnection(connection -> {
@@ -251,7 +251,6 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             }
         });
     }
-
     @Override
     public Image getPredefinedImageById(int imageId) throws DaoException {
         return executeWithConnection(connection -> {
@@ -267,20 +266,5 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 throw new RuntimeException(e);
             }
         });
-    }
-
-    private <R> R executeWithConnection(Function<Connection, R> function) throws DaoException {
-        Connection connection = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            return function.apply(connection);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new DaoException("Thread was interrupted", e);
-        } finally {
-            if (connection != null) {
-                closeConnection(connection);
-            }
-        }
     }
 }

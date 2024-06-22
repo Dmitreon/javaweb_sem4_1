@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.util;
+package com.example.javaweb_sem4_1.util.utility;
 
 import java.util.Random;
 

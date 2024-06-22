@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.command.impl;
+package com.example.javaweb_sem4_1.command.impl.account;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
@@ -8,7 +8,8 @@ import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -18,7 +19,7 @@ public class UpdatePasswordCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession(false);
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute(AttributeConstant.CURRENT_USER);
         Router router = new Router();
 
         if (currentUser == null) {
@@ -32,17 +33,17 @@ public class UpdatePasswordCommand implements Command {
             return router;
         }
 
-        String currentPassword = request.getParameter("currentPassword");
+        String currentPassword = request.getParameter(AttributeConstant.PASSWORD);
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
         try {
             userService.changePassword(currentUser, currentPassword, newPassword, confirmPassword);
-            session.setAttribute("currentUser", currentUser); // Update session user
+            session.setAttribute(AttributeConstant.CURRENT_USER, currentUser);
             router.setPage(PageConstant.SUCCESS_UPDATE_PASSWORD_PAGE);
             router.setRedirect();
         } catch (ServiceException | DaoException e) {
-            request.setAttribute("errorMessage", e.getMessage());
+            request.setAttribute(AttributeConstant.ERROR_MESSAGE, e.getMessage());
             router.setPage(PageConstant.UPDATE_PASSWORD_PAGE);
         }
 

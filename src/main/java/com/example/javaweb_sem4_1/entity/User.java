@@ -2,7 +2,7 @@ package com.example.javaweb_sem4_1.entity;
 
 import java.util.Objects;
 
-public class User extends AbstractEntity {
+public class User {
     private int id;
     private String username;
     private String password;
@@ -10,7 +10,6 @@ public class User extends AbstractEntity {
     private Integer predefinedImageId;
     private String role;
 
-    // Геттеры и сеттеры
     public int getId() {
         return id;
     }

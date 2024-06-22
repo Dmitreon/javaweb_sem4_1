@@ -1,8 +1,8 @@
-package com.example.javaweb_sem4_1.command.impl;
+package com.example.javaweb_sem4_1.command.impl.auth;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class LogoutCommand implements Command {

@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.util;
+package com.example.javaweb_sem4_1.util.utility;
 
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.security.EmailConfig;

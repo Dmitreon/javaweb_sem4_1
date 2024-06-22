@@ -7,7 +7,12 @@ import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
-import com.example.javaweb_sem4_1.util.*;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.utility.CodeGenerator;
+import com.example.javaweb_sem4_1.util.utility.EmailSender;
+import com.example.javaweb_sem4_1.util.validator.FieldValidator;
+import com.example.javaweb_sem4_1.util.validator.ImageValidator;
+import com.example.javaweb_sem4_1.util.validator.UserValidator;
 import jakarta.servlet.http.Part;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -32,10 +37,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User authenticate(String login, String password) throws ServiceException {
         try {
-            if (!FieldValidator.isValidField("username")) {
+            if (!FieldValidator.isValidField(AttributeConstant.USERNAME)) {
                 throw new ServiceException("Invalid field");
             }
-            User user = userDao.findBy("username", login);
+            User user = userDao.findBy(AttributeConstant.USERNAME, login);
             if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                 return user;
             } else {
@@ -113,15 +118,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Override
     public User findUserById(int id) throws ServiceException {
         try {
-            if (!FieldValidator.isValidField("id")) {
+            if (!FieldValidator.isValidField(AttributeConstant.USERNAME)) {
                 logger.log(Level.SEVERE, "Invalid field");
                 throw new ServiceException("Invalid field for user lookup");
             }
-            return userDao.findBy("id", Integer.toString(id));
+            return userDao.findBy(AttributeConstant.USERNAME, Integer.toString(id));
         } catch (DaoException e) {
             logger.log(Level.SEVERE, "Error finding user by ID", e);
             throw new ServiceException("Error finding user by ID", e);
@@ -172,7 +176,6 @@ public class UserServiceImpl implements UserService {
         }
         return verificationCode;
     }
-
 
     @Override
     public boolean deleteUser(int id) throws ServiceException {

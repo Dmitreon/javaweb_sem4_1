@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.util;
+package com.example.javaweb_sem4_1.util.constant;
 
 public final class PageConstant {
     public static final String INDEX_PAGE = "index.jsp";

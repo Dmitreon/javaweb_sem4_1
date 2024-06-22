@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.command.impl;
+package com.example.javaweb_sem4_1.command.impl.auth;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
@@ -7,7 +7,8 @@ import com.example.javaweb_sem4_1.exception.CommandException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -16,25 +17,25 @@ public class LoginCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String login = request.getParameter("login");
-        String password = request.getParameter("pass");
+        String login = request.getParameter(AttributeConstant.USERNAME);
+        String password = request.getParameter(AttributeConstant.PASSWORD);
         HttpSession session = request.getSession();
         Router router = new Router();
 
         try {
             User authenticatedUser = userService.authenticate(login, password);
             if (authenticatedUser != null) {
-                session.setAttribute("currentUser", authenticatedUser);
-                session.removeAttribute("login_msg");
+                session.setAttribute(AttributeConstant.CURRENT_USER, authenticatedUser);
+                session.removeAttribute(AttributeConstant.LOGIN_MSG);
                 router.setPage(PageConstant.MAIN_PAGE);
                 router.setRedirect();
             } else {
-                session.setAttribute("login_msg", "Incorrect login or password");
+                session.setAttribute(AttributeConstant.LOGIN_MSG, "Incorrect login or password");
                 router.setPage(PageConstant.INDEX_PAGE);
                 router.setRedirect();
             }
         } catch (ServiceException e) {
-            session.setAttribute("login_msg", "Login error: " + e.getMessage());
+            session.setAttribute(AttributeConstant.LOGIN_MSG, "Login error: " + e.getMessage());
             router.setPage(PageConstant.INDEX_PAGE);
             router.setRedirect();
         }

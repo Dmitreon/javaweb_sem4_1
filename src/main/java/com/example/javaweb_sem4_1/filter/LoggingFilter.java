@@ -1,5 +1,6 @@
 package com.example.javaweb_sem4_1.filter;
 
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -24,8 +25,8 @@ public class LoggingFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String uri = httpRequest.getRequestURI();
         String method = httpRequest.getMethod();
-        String user = (httpRequest.getSession().getAttribute("currentUser") != null) ?
-                httpRequest.getSession().getAttribute("currentUser").toString() : "anonymous";
+        String user = (httpRequest.getSession().getAttribute(AttributeConstant.CURRENT_USER) != null) ?
+                httpRequest.getSession().getAttribute(AttributeConstant.CURRENT_USER).toString() : "anonymous";
 
         logger.info(String.format("User %s requested %s %s", user, method, uri));
 

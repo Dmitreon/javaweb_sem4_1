@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.command.impl;
+package com.example.javaweb_sem4_1.command.impl.admin;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
@@ -6,7 +6,8 @@ import com.example.javaweb_sem4_1.exception.CommandException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
 import com.example.javaweb_sem4_1.service.impl.UserServiceImpl;
-import com.example.javaweb_sem4_1.util.PageConstant;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
@@ -27,12 +28,12 @@ public class AddPredefinedImageCommand implements Command {
                     router.setPage(PageConstant.ADD_IMAGE_SUCCESS_PAGE);
                     router.setType(Router.Type.REDIRECT);
                 } else {
-                    request.getSession().setAttribute("error", "Failed to add image.");
+                    request.getSession().setAttribute(AttributeConstant.ERROR, "Failed to add image.");
                     router.setPage(PageConstant.ADD_IMAGE_PAGE);
                     router.setType(Router.Type.FORWARD);
                 }
             } catch (ServiceException e) {
-                request.getSession().setAttribute("error", e.getMessage());
+                request.getSession().setAttribute(AttributeConstant.ERROR, e.getMessage());
                 router.setPage(PageConstant.ADD_IMAGE_PAGE);
                 router.setType(Router.Type.FORWARD);
             }

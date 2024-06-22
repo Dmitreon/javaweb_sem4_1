@@ -1,4 +1,4 @@
-package com.example.javaweb_sem4_1.util;
+package com.example.javaweb_sem4_1.util.constant;
 
 public final class SqlQuery {
     public static final String INSERT_USER = "INSERT INTO users (username, password, email, predefined_image_id, role) VALUES (?, ?, ?, ?, ?)";

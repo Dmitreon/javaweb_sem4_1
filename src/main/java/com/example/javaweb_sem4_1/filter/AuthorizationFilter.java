@@ -1,6 +1,8 @@
 package com.example.javaweb_sem4_1.filter;
 
 import com.example.javaweb_sem4_1.entity.User;
+import com.example.javaweb_sem4_1.util.constant.AttributeConstant;
+import com.example.javaweb_sem4_1.util.constant.PageConstant;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -32,13 +34,13 @@ public class AuthorizationFilter implements Filter {
         String command = httpRequest.getParameter("command");
         if (command != null && ADMIN_COMMANDS.contains(command.toUpperCase())) {
             if (session != null) {
-                User currentUser = (User) session.getAttribute("currentUser");
+                User currentUser = (User) session.getAttribute(AttributeConstant.CURRENT_USER);
                 if (currentUser != null && "admin".equals(currentUser.getRole())) {
                     chain.doFilter(request, response);
                     return;
                 }
             }
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/index.jsp");
+            httpResponse.sendRedirect(httpRequest.getContextPath() + PageConstant.INDEX_PAGE);
         } else {
             chain.doFilter(request, response);
         }

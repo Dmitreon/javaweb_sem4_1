@@ -1,6 +1,12 @@
 package com.example.javaweb_sem4_1.command;
 
-import com.example.javaweb_sem4_1.command.impl.*;
+import com.example.javaweb_sem4_1.command.impl.account.*;
+import com.example.javaweb_sem4_1.command.impl.admin.AddPredefinedImageCommand;
+import com.example.javaweb_sem4_1.command.impl.admin.AddUserCommand;
+import com.example.javaweb_sem4_1.command.impl.admin.DeleteUserCommand;
+import com.example.javaweb_sem4_1.command.impl.admin.ViewUsersCommand;
+import com.example.javaweb_sem4_1.command.impl.auth.*;
+import com.example.javaweb_sem4_1.command.impl.common.DefaultCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
