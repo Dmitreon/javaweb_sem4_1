@@ -13,11 +13,7 @@ public class EmailSender {
     private Properties mailProps;
 
     private EmailSender() {
-        mailProps = new Properties();
-        mailProps.put("mail.smtp.host", "smtp.mailtrap.io");
-        mailProps.put("mail.smtp.auth", "true");
-        mailProps.put("mail.smtp.port", "2525");
-        mailProps.put("mail.smtp.starttls.enable", "true");
+        mailProps = EmailConfig.getMailProperties();
     }
 
     public static EmailSender getInstance() {
