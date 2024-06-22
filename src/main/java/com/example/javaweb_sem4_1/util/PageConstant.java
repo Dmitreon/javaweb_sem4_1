@@ -19,6 +19,7 @@ public final class PageConstant {
     public static final String ADD_IMAGE_PAGE = "pages/admin/add_image.jsp";
     public static final String ADD_IMAGE_SUCCESS_PAGE = "pages/admin/add_image_success.jsp";
     public static final String VIEW_IMAGES_PAGE = "pages/account/profile/view_images.jsp";
+    public static final String VERIFICATION_PAGE = "pages/account/register/verification.jsp";
 
     private PageConstant() {
         throw new AssertionError("Instantiating utility class.");

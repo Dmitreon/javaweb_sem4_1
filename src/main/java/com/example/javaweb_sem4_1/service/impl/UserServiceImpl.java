@@ -7,9 +7,7 @@ import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.DaoException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
-import com.example.javaweb_sem4_1.util.FieldValidator;
-import com.example.javaweb_sem4_1.util.ImageValidator;
-import com.example.javaweb_sem4_1.util.UserValidator;
+import com.example.javaweb_sem4_1.util.*;
 import jakarta.servlet.http.Part;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -96,6 +94,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean usernameExists(String username) throws ServiceException {
+        try {
+            return userDao.usernameExists(username);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Error checking if username exists", e);
+            throw new ServiceException("Error checking if username exists", e);
+        }
+    }
+
+    @Override
+    public boolean emailExists(String email) throws ServiceException {
+        try {
+            return userDao.emailExists(email);
+        } catch (DaoException e) {
+            logger.log(Level.SEVERE, "Error checking if email exists", e);
+            throw new ServiceException("Error checking if email exists", e);
+        }
+    }
+
+
+    @Override
     public User findUserById(int id) throws ServiceException {
         try {
             if (!FieldValidator.isValidField("id")) {
@@ -137,6 +156,23 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Failed to update password.");
         }
     }
+
+    @Override
+    public int verification(String userEmail) throws ServiceException {
+        if (!UserValidator.isValidEmail(userEmail)) {
+            throw new ServiceException("Invalid email.");
+        }
+        int verificationCode = CodeGenerator.generate();
+        EmailSender emailSender = EmailSender.getInstance();
+        try {
+            emailSender.sendEmail(userEmail, verificationCode);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error while sending verification code", e);
+            throw new ServiceException("Error while sending verification code", e);
+        }
+        return verificationCode;
+    }
+
 
     @Override
     public boolean deleteUser(int id) throws ServiceException {

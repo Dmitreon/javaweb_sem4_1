@@ -81,7 +81,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                     if (!resultSet.wasNull()) {
                         user.setPredefinedImageId(predefinedImageId);
                     }
-                    user.setRole(resultSet.getString(COLUMN_ROLE)); // Установка роли
+                    user.setRole(resultSet.getString(COLUMN_ROLE));
                     users.add(user);
                 }
                 return users;

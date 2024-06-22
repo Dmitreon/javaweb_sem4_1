@@ -2,7 +2,6 @@ package com.example.javaweb_sem4_1.command.impl;
 
 import com.example.javaweb_sem4_1.command.Command;
 import com.example.javaweb_sem4_1.command.Router;
-import com.example.javaweb_sem4_1.entity.User;
 import com.example.javaweb_sem4_1.exception.CommandException;
 import com.example.javaweb_sem4_1.exception.ServiceException;
 import com.example.javaweb_sem4_1.service.UserService;
@@ -23,24 +22,28 @@ public class RegisterUserCommand implements Command {
         String password = request.getParameter(PARAM_PASSWORD);
         String email = request.getParameter(PARAM_EMAIL);
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-
         Router router = new Router();
         HttpSession session = request.getSession();
         try {
-            userService.createUser(user);
-            session.removeAttribute("login_msg");
-            session.removeAttribute("error");
-            router.setPage(PageConstant.REGISTER_SUCCESS_PAGE);
-            router.setRedirect();
+            if (userService.usernameExists(username)) {
+                session.setAttribute("error", "Username already exists.");
+                router.setPage(PageConstant.REGISTER_PAGE);
+            } else if (userService.emailExists(email)) {
+                session.setAttribute("error", "Email already exists.");
+                router.setPage(PageConstant.REGISTER_PAGE);
+            } else {
+                int verificationCode = userService.verification(email);
+                session.setAttribute("username", username);
+                session.setAttribute("password", password);
+                session.setAttribute("email", email);
+                session.setAttribute("verificationCode", verificationCode);
+                router.setPage(PageConstant.VERIFICATION_PAGE);
+            }
         } catch (ServiceException e) {
             session.setAttribute("error", e.getMessage());
             router.setPage(PageConstant.REGISTER_PAGE);
-            router.setRedirect();
         }
+        router.setRedirect();
         return router;
     }
 }

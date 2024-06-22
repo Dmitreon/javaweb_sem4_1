@@ -13,6 +13,8 @@ public enum CommandType {
     LOGOUT(new LogoutCommand()),
     VIEW_USERS(new ViewUsersCommand()),
     REGISTER_USER(new RegisterUserCommand()),
+    SEND_EMAIL(new SendEmailCommand()),
+    VERIFY_CODE(new VerifyCodeCommand()),
     VIEW_PROFILE(new ViewProfileCommand()),
     UPDATE_PASSWORD(new UpdatePasswordCommand()),
     DELETE_USER(new DeleteUserCommand()),
