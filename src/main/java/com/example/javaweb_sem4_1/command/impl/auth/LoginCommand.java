@@ -17,8 +17,8 @@ public class LoginCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String login = request.getParameter(AttributeConstant.USERNAME);
-        String password = request.getParameter(AttributeConstant.PASSWORD);
+        String login = request.getParameter("login");
+        String password = request.getParameter("pass");
         HttpSession session = request.getSession();
         Router router = new Router();
 
@@ -26,16 +26,16 @@ public class LoginCommand implements Command {
             User authenticatedUser = userService.authenticate(login, password);
             if (authenticatedUser != null) {
                 session.setAttribute(AttributeConstant.CURRENT_USER, authenticatedUser);
-                session.removeAttribute(AttributeConstant.LOGIN_MSG);
+                session.removeAttribute("login_msg");
                 router.setPage(PageConstant.MAIN_PAGE);
                 router.setRedirect();
             } else {
-                session.setAttribute(AttributeConstant.LOGIN_MSG, "Incorrect login or password");
+                session.setAttribute("login_msg", "Incorrect login or password");
                 router.setPage(PageConstant.INDEX_PAGE);
                 router.setRedirect();
             }
         } catch (ServiceException e) {
-            session.setAttribute(AttributeConstant.LOGIN_MSG, "Login error: " + e.getMessage());
+            session.setAttribute("login_msg", "Login error: " + e.getMessage());
             router.setPage(PageConstant.INDEX_PAGE);
             router.setRedirect();
         }

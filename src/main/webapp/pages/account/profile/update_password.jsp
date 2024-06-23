@@ -34,6 +34,6 @@
         <button type="submit"><fmt:message key="update"/></button>
     </div>
 </form>
-<a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back"/></a>
+<button onclick="history.back()"><fmt:message key="back"/></button>
 </body>
 </html>

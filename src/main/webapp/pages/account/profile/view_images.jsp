@@ -50,6 +50,6 @@
 <c:if test="${empty images}">
     <p><fmt:message key="no_images_available"/></p>
 </c:if>
-<a href="${pageContext.request.contextPath}/pages/main/main.jsp"><fmt:message key="back_to_main"/></a>
+<button onclick="history.back()"><fmt:message key="back"/></button>
 </body>
 </html>
