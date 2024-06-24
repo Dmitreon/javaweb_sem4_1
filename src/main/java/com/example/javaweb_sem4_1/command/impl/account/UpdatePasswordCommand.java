@@ -33,7 +33,7 @@ public class UpdatePasswordCommand implements Command {
             return router;
         }
 
-        String currentPassword = request.getParameter(AttributeConstant.PASSWORD);
+        String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 

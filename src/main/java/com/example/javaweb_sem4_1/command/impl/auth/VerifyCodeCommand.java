@@ -35,15 +35,17 @@ public class VerifyCodeCommand implements Command {
             try {
                 userService.createUser(user);
                 router.setPage(PageConstant.REGISTER_SUCCESS_PAGE);
+                router.setType(Router.Type.REDIRECT);
             } catch (ServiceException e) {
                 session.setAttribute(AttributeConstant.ERROR, e.getMessage());
                 router.setPage(PageConstant.REGISTER_PAGE);
+                router.setType(Router.Type.FORWARD);
             }
         } else {
             request.setAttribute(AttributeConstant.ERROR, "Invalid verification code");
             router.setPage(PageConstant.VERIFICATION_PAGE);
+            router.setType(Router.Type.FORWARD);
         }
-        router.setRedirect();
         return router;
     }
 }

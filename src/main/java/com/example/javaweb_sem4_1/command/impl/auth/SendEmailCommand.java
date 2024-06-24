@@ -31,9 +31,11 @@ public class SendEmailCommand implements Command {
                 session.setAttribute(AttributeConstant.EMAIL, email);
                 session.setAttribute(AttributeConstant.VERIFICATION_CODE, verificationCode);
                 router.setPage(PageConstant.VERIFICATION_PAGE);
+                router.setType(Router.Type.REDIRECT);
             } else {
                 request.setAttribute(AttributeConstant.SIGNUP_ERROR, "Incorrect email address");
                 router.setPage(PageConstant.REGISTER_PAGE);
+                router.setType(Router.Type.FORWARD);
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
